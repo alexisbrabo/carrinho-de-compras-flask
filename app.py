@@ -121,6 +121,16 @@ def get_lista():
     return jsonify(result.data)
 
 
+# endpoint para deletar a lista de compra
+@app.route("/listacompras/<id>", methods=["DELETE"])
+def produto_delete(id):
+    lista = Listacompra.query.get(id)
+    db.session.delete(lista)
+    db.session.commit()
+
+    return lista_schema.jsonify(lista)
+
+
 # endpoint para mostrar todos os clientes
 @app.route("/cliente", methods=["GET"])
 def get_user():
