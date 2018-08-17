@@ -106,7 +106,7 @@ def add_produto():
 
 
 # endpoint para atualizar produto
-@app.route("/produto/<id>", methods=["PUT"])
+@app.route("/produto/atualizar/<id>", methods=['GET', 'POST', 'PUT'])
 def produto_update(id):
 
     produto = Produto.query.get(id)
@@ -117,6 +117,17 @@ def produto_update(id):
     produto.nome = nome
     produto.valor = valor
 
+    db.session.commit()
+    return produto_schema.jsonify(produto)
+
+    
+# endpoint para remover produto
+@app.route("/produto/<id>", methods=["DELETE"])
+def produto_delete(id):
+
+    produto = Produto.query.get(id)
+    
+    db.session.delete(produto)
     db.session.commit()
     return produto_schema.jsonify(produto)
 
@@ -142,7 +153,7 @@ def get_lista():
 
 # endpoint para deletar a lista de compra
 @app.route("/listacompras/<id>", methods=["DELETE"])
-def produto_delete(id):
+def lista_delete(id):
     lista = Listacompra.query.get(id)
     db.session.delete(lista)
     db.session.commit()
