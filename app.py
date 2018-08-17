@@ -38,7 +38,10 @@ class Produto(db.Model):
 
     def __init__(self, nome, valor, listacompra_id):
         self.nome = nome
-        self.valor = valor
+        if valor is '':
+            self.valor = None
+        else:
+            self.valor = valor
         self.listacompra_id = listacompra_id
 
 
@@ -102,6 +105,22 @@ def add_produto():
     return produto_schema.jsonify(new_produto)
 
 
+# endpoint para atualizar produto
+@app.route("/produto/<id>", methods=["PUT"])
+def produto_update(id):
+
+    produto = Produto.query.get(id)
+    
+    nome = request.json['nome']
+    valor = request.json['valor']
+    
+    produto.nome = nome
+    produto.valor = valor
+
+    db.session.commit()
+    return produto_schema.jsonify(produto)
+
+
 # endpoint para criar lista de compras
 @app.route("/listacompras", methods=["POST"])
 def add_lista():
@@ -148,8 +167,8 @@ def user_detail(id):
 
 # endpoint para atualizar cliente
 @app.route("/cliente/<id>", methods=["PUT"])
-def user_update(id):
-    cliente = Cliente.query.get(id)
+def cliente_update(id):
+    cliente = Cliente.query.get(id).first()
     nome = request.json['nome']
 
     cliente.nome = nome
